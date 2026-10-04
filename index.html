@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI and I | علی‌اکبر صادقی</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080B10;
+            --bg-card: rgba(13, 17, 23, 0.75);
+            --cyan: #00E5FF;
+            --magenta: #FF2A85;
+            --violet: #8A2BE2;
+            --gold: #D4AF37;
+            --text-main: #F0F6FC;
+            --text-muted: #8B949E;
+            --border-glow: rgba(0, 229, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px 20px;
+        }
+
+        ::selection {
+            background: var(--magenta);
+            color: #fff;
+        }
+
+        /* ذرات زنده پس‌زمینه */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-aurora {
+            position: fixed;
+            width: 750px;
+            height: 750px;
+            border-radius: 50%;
+            filter: blur(170px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 15s infinite alternate ease-in-out;
+        }
+
+        .aurora-1 {
+            background: radial-gradient(circle, var(--cyan), transparent 60%);
+            top: -250px;
+            left: -200px;
+        }
+
+        .aurora-2 {
+            background: radial-gradient(circle, var(--magenta), transparent 60%);
+            bottom: -250px;
+            right: -200px;
+            animation-duration: 20s;
+            animation-delay: -6s;
+        }
+
+        @keyframes drift {
+            0% { transform: scale(0.85) translate(0, 0); }
+            50% { transform: scale(1.2) translate(50px, 35px); }
+            100% { transform: scale(0.9) translate(-40px, 60px); }
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 45px;
+        }
+
+        /* هدر پرچمدار */
+        .hero-banner {
+            background: var(--bg-card);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 36px;
+            padding: 60px 45px 50px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 35px 90px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), var(--violet), transparent);
+            filter: drop-shadow(0 0 12px var(--cyan));
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 8px 22px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--cyan);
+            font-weight: 600;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.15);
+            margin-bottom: 22px;
+        }
+
+        .pulsing-core {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan);
+            animation: pulse-ring 1.8s cubic-bezier(0.25, 0, 0, 1) infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.6); opacity: 1; box-shadow: 0 0 18px var(--cyan); }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        .hero-title {
+            font-size: 4.6rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #FFFFFF 20%, var(--cyan) 50%, var(--magenta) 80%, var(--gold) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textFlow 6s linear infinite;
+        }
+
+        .owner-badge {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .owner-badge span {
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        @keyframes textFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.9;
+            max-width: 780px;
+            margin: 0 auto 35px;
+            font-weight: 400;
+        }
+
+        .hero-sub strong {
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        /* کارت‌های اهداف و نگرش */
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 35px;
+            text-align: right;
+        }
+
+        .vision-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 20px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .vision-item:hover {
+            border-color: rgba(0, 229, 255, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-3px);
+        }
+
+        .vision-icon {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .vision-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--cyan);
+            margin-bottom: 6px;
+        }
+
+        .vision-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* دکمه‌های ارتباطی */
+        .quick-contact-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .neon-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 28px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-decoration: none;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .neon-chip::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.15), rgba(255, 42, 133, 0.15));
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .neon-chip:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 229, 255, 0.25);
+        }
+
+        .neon-chip:hover::before { opacity: 1; }
+
+        .neon-chip.phone:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 12px 28px rgba(0, 229, 255, 0.28);
+        }
+
+        .neon-chip.email:hover {
+            border-color: var(--magenta);
+            box-shadow: 0 12px 28px rgba(255, 42, 133, 0.28);
+        }
+
+        .chip-icon { font-size: 1.15rem; position: relative; z-index: 1; }
+        .chip-val { position: relative; z-index: 1; direction: ltr; letter-spacing: 0.5px; }
+
+        /* بخش سرفصل پروژه‌ها */
+        .showcase-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .header-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--magenta);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--magenta);
+        }
+
+        .header-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: #FFFFFF;
+        }
+
+        .header-count {
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--cyan);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+
+        /* ماتریس پروژه‌ها و افکت اسپات‌لایت */
+        .portfolio-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+            width: 100%;
+        }
+
+        .spot-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-decoration: none;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 195px;
+        }
+
+        .spot-card::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, -150px);
+            left: var(--mouse-x, -150px);
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.18), transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .spot-card:hover::before { opacity: 1; }
+
+        .spot-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 229, 255, 0.45);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 25px rgba(0, 229, 255, 0.12);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .card-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+
+        .live-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #3fb950;
+            font-weight: 700;
+        }
+
+        .live-tag::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            background: #3fb950;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #3fb950;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+            transition: color 0.3s;
+        }
+
+        .spot-card:hover .project-title { color: var(--cyan); }
+
+        .project-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .card-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 14px;
+        }
+
+        .project-domain {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            direction: ltr;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .arrow-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .spot-card:hover .arrow-action {
+            background: var(--magenta);
+            border-color: var(--magenta);
+            color: #FFFFFF;
+            transform: scale(1.1) translateX(-3px);
+            box-shadow: 0 0 15px rgba(255, 42, 133, 0.6);
+        }
+
+        footer {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #6E7681;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 850px) {
+            .vision-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 3.4rem; }
+            .hero-banner { padding: 40px 22px; }
+            .hero-sub { font-size: 1.05rem; }
+            .portfolio-matrix { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- بوم ذرات شبکه هوش مصنوعی -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- هاله‌های ارتعاشی پس‌زمینه -->
+    <div class="ambient-aurora aurora-1"></div>
+    <div class="ambient-aurora aurora-2"></div>
+
+    <div class="wrapper">
+
+        <!-- هدر و معرفی شخصی -->
+        <header class="hero-banner">
+            <div class="status-pill">
+                <span class="pulsing-core"></span>
+                <span>فضای شخصی توسعه، یادگیری و راهبری نوآوری</span>
+            </div>
+
+            <h1 class="hero-title">AI and I</h1>
+            <div class="owner-badge">پلتفرم شخصی و جامع <span>علی‌اکبر صادقی</span></div>
+
+            <p class="hero-sub">
+                این فضا با رویکرد <strong>جامع، آموزشی و توسعه اکوسیستم‌های دیجیتال</strong> طراحی شده است. هدف من ایجاد بستری برای همگرایی هوش مصنوعی، یادگیری عمیق، مدیریت استراتژیک و توسعه پروژه‌های مقیاس‌پذیر در دنیای فناوری است.
+            </p>
+
+            <!-- ارکان نگرش و هدف -->
+            <div class="vision-grid">
+                <div class="vision-item">
+                    <span class="vision-icon">🧠</span>
+                    <h4 class="vision-title">آموزش و انتقال دانش</h4>
+                    <p class="vision-desc">مفاهیم تحلیلی، معماری داده و کاربست هوش مصنوعی در ساختارهای واقعی کسب‌وکار.</p>
+                </div>
+                <div class="vision-item">
+                    <span class="vision-icon">⚡</span>
+                    <h4 class="vision-title">توسعه اکوسیستم</h4>
+                    <p class="vision-desc">طراحی، راه‌اندازی و بهینه‌سازی مداوم پلتفرم‌های تخصصی در صنایع گوناگون.</p>
+                </div>
+                <div class="vision-item">
+                    <span class="vision-icon">🎯</span>
+                    <h4 class="vision-title">راهبری و هدایت محصول</h4>
+                    <p class="vision-desc">نگرش سیستمی، نظارت جامع و ارتقای استاندارد پروژه‌های فعال.</p>
+                </div>
+            </div>
+
+            <div class="quick-contact-row">
+                <a href="tel:09123764840" class="neon-chip phone">
+                    <span class="chip-icon">📱</span>
+                    <span class="chip-val">0912 376 4840</span>
+                </a>
+                <a href="mailto:info@aiandi.ir" class="neon-chip email">
+                    <span class="chip-icon">✉</span>
+                    <span class="chip-val">info@aiandi.ir</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- بخش نمونه‌کارها و پروژه‌های تحت نظر -->
+        <div class="showcase-header">
+            <div class="header-title-wrap">
+                <div class="terminal-dot"></div>
+                <h2 class="header-title">اکوسیستم پروژه‌های فعال تحت راهبری</h2>
+            </div>
+            <span class="header-count">۷ پلتفرم آنلاین</span>
+        </div>
+
+        <div class="portfolio-matrix">
+
+            <!-- 1 -->
+            <a href="https://dr-susanahmadi.com" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_01</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">دکتر سوسن احمدی</h3>
+                    <p class="project-desc">سامانه رزرواسیون، پزشکی و خدمات سلامت تخصصی</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">dr-susanahmadi.com</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 2 -->
+            <a href="https://arzanazma.com" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_02</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">ارزان آزما</h3>
+                    <p class="project-desc">پلتفرم آنلاین خدمات آزمایشگاهی و نمونه‌گیری در محل</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">arzanazma.com</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 3 -->
+            <a href="https://yadakcat.ir" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_03</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">یدک کت</h3>
+                    <p class="project-desc">مرکز جامع و آنلاین تأمین قطعات و لوازم یدکی خودرو</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">yadakcat.ir</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 4 -->
+            <a href="https://bedata.ir" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_04</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">بی دیتا</h3>
+                    <p class="project-desc">پلتفرم تحلیل هوشمند داده، آمار و راهکارهای تحلیلی</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">bedata.ir</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 5 -->
+            <a href="https://tehranpolish.com" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_05</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">تهران پولیش</h3>
+                    <p class="project-desc">تأمین تجهیزات، پرداخت‌کاری و پولیش سطوح صنعتی</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">tehranpolish.com</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 6 -->
+            <a href="https://offinow.ir" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_06</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">آفینو</h3>
+                    <p class="project-desc">موتور هوشمند پیشنهادهای تخفیف‌دار و فرصت‌های خرید</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">offinow.ir</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+            <!-- 7 -->
+            <a href="https://yadakinow.ir" target="_blank" rel="noopener" class="spot-card">
+                <div class="card-top">
+                    <span class="card-badge">PROJ_07</span>
+                    <span class="live-tag">Online</span>
+                </div>
+                <div>
+                    <h3 class="project-title">یدکینو</h3>
+                    <p class="project-desc">اکوسیستم نوین تأمین و توزیع لوازم یدکی خودرویی</p>
+                </div>
+                <div class="card-bottom">
+                    <span class="project-domain">yadakinow.ir</span>
+                    <div class="arrow-action">←</div>
+                </div>
+            </a>
+
+        </div>
+
+        <footer>
+            <div><strong>AI and I</strong> &bull; وب‌سایت و پلتفرم شخصی <strong>علی‌اکبر صادقی</strong></div>
+            <div style="font-size: 0.78rem; margin-top: 4px; color: #484f58;">aiandi.ir &copy; تمامی حقوق معنوی و محتوایی محفوظ است.</div>
+        </footer>
+
+    </div>
+
+    <!-- تعاملات نوری و ذرات -->
+    <script>
+        document.querySelectorAll('.spot-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(0, 229, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const count = Math.min(Math.floor(window.innerWidth / 16), 65);
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 115) {
+                        ctx.strokeStyle = `rgba(0, 229, 255, ${0.12 - dist / 1000})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
